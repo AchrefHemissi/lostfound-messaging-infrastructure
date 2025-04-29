@@ -6,7 +6,7 @@
 A lightweight and secure FastAPI microservice that acts as a proxy for uploading and downloading images to and from Azure Blob Storage. Built for seamless integration with frontend clients (like Flutter apps) or other microservices (like AI pipelines or Firebase functions).
 
 ---
-
+```
 ## ✨ Features
 
 - ✅ Secure image uploads to Azure Blob Storage
@@ -19,7 +19,6 @@ A lightweight and secure FastAPI microservice that acts as a proxy for uploading
 
 ## 🗂️ Project Structure
 
-```
 proxy-layer/
 ├── app/
 │   ├── main.py            # FastAPI routes
