@@ -25,11 +25,11 @@ proxy-layer/
 ├── .env                   # Environment variables
 ├── requirements.txt       # Python dependencies
 └── README.md              # This file
-```
 
----
 
 ## ⚙️ Setup
+```
+---
 
 1. Clone the repo:
 
