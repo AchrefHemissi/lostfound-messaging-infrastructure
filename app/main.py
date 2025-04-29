@@ -2,6 +2,7 @@ from fastapi import FastAPI, File, UploadFile, HTTPException, Header, Request
 from fastapi.responses import StreamingResponse
 from azure.storage.blob import BlobServiceClient, ContentSettings, generate_blob_sas, BlobSasPermissions
 from dotenv import load_dotenv
+from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime, timedelta
 import mimetypes
 import os
@@ -25,6 +26,13 @@ blob_service_client = BlobServiceClient.from_connection_string(AZURE_CONNECTION_
 container_client = blob_service_client.get_container_client(CONTAINER_NAME)
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins - adjust this in production!
+    allow_credentials=True,
+    allow_methods=["*"], 
+    allow_headers=["*"], 
+)
 
 def validate_api_key(api_key: str | None, allowed_keys: set):
     if not api_key or api_key not in allowed_keys:
