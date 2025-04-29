@@ -1,116 +1,133 @@
+
 ```markdown
-# Azure Blob Storage Proxy API
+# 🧊 Azure Blob Storage Proxy API
 
-This project is a secure FastAPI microservice acting as a proxy layer for uploading and downloading images to/from Azure Blob Storage. It enables controlled access via API keys and is suitable for integration with frontend clients (like Flutter apps) or other microservices (like AI model pipelines or Firebase functions).
+A lightweight and secure FastAPI microservice that acts as a proxy for uploading and downloading images to and from Azure Blob Storage. Built for seamless integration with frontend clients (like Flutter apps) or other microservices (like AI pipelines or Firebase functions).
 
-## 🚀 Features
+---
 
-- 📤 Upload image files securely to Azure Blob Storage
-- 📥 Download image files by name
-- 🔐 API key validation for upload and download routes
-- ☁️ Environment variable support (.env) for configuration
+## ✨ Features
 
-## 📁 Project Structure
+- ✅ Secure image uploads to Azure Blob Storage
+- ✅ Secure image downloads with proper content-type headers
+- ✅ Image deletion endpoint
+- 🔐 API Key authentication
+- 📦 .env-based configuration
+
+---
+
+## 🗂️ Project Structure
 
 ```
 proxy-layer/
-│
 ├── app/
-│   ├── main.py            # Main FastAPI app
-│   └── dependencies.py    # API key validation logic
-│
+│   ├── main.py            # FastAPI routes
+│   └── dependencies.py    # API key validation
 ├── .env                   # Environment variables
 ├── requirements.txt       # Python dependencies
 └── README.md              # This file
 ```
 
-## 🔧 Requirements
+---
 
-- Python 3.10+
-- Azure Storage Account with a Blob Container
+## ⚙️ Setup
 
-Install dependencies:
+1. Clone the repo:
+
+```bash
+git clone https://github.com/your-username/your-repo.git
+cd your-repo
+```
+
+2. Create a virtual environment:
+
+```bash
+python -m venv venv
+source venv/bin/activate  # or venv\Scripts\activate on Windows
+```
+
+3. Install the dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## 🌍 Environment Variables (.env)
-
-Create a `.env` file in the root directory:
+4. Create a `.env` file:
 
 ```env
-AZURE_STORAGE_CONNECTION_STRING=your_azure_connection_string
+AZURE_STORAGE_CONNECTION_STRING=your_azure_blob_connection_string
 AZURE_CONTAINER_NAME=your_container_name
 AUTHORIZED_UPLOAD_KEYS=your_upload_key1,your_upload_key2
 AUTHORIZED_AI_KEYS=your_ai_key1,your_ai_key2
 ```
 
-## 🧪 API Usage
+---
 
-### Upload Image
-
-- Endpoint: `POST /upload/`
-- Headers:
-  - `x-api-key`: your authorized upload key
-- Body (multipart/form-data):
-  - `file`: image file (e.g., .jpg, .png)
-
-✅ Example using curl:
-
-```bash
-curl -X POST http://localhost:8000/upload/ \
-  -H "x-api-key: your_upload_key" \
-  -F "file=@image.jpg"
-```
-
-### Download Image
-
-- Endpoint: `GET /download/{blob_name}`
-- Headers:
-  - `x-api-key`: your authorized AI key
-
-✅ Example:
-
-```bash
-curl -X GET http://localhost:8000/download/image.jpg \
-  -H "x-api-key: your_ai_key" --output image.jpg
-```
-
-### Delete Image
-
-- Endpoint: `DELETE /delete/{blob_name}`
-- Headers:
-  - `x-api-key`: your authorized upload key
-
-✅ Example:
-
-```bash
-curl -X DELETE http://localhost:8000/delete/image.jpg \
-  -H "x-api-key: your_upload_key"
-```
-
-## 🧰 Notes
-
-- Upload keys and AI keys are validated independently
-- Images are returned with correct MIME types (image/jpeg, image/png, etc.)
-- Error handling is built-in for missing keys or blobs
-
-## 📦 Deployment
-
-To run locally:
+## 🚀 Run the Server
 
 ```bash
 uvicorn app.main:app --reload
 ```
 
-Or in production:
+> Runs on http://localhost:8000 by default
+
+---
+
+## 📤 Upload an Image
+
+- URL: `POST /upload/`
+- Headers:
+  - `x-api-key: your_upload_key`
+- Body: `multipart/form-data`
+  - Field: `file` → (image file)
 
 ```bash
-uvicorn app.main:app --host 0.0.0.0 --port 8000
+curl -X POST http://localhost:8000/upload/ \
+  -H "x-api-key: your_upload_key" \
+  -F "file=@path/to/image.jpg"
 ```
+
+---
+
+## 📥 Download an Image
+
+- URL: `GET /download/{blob_name}`
+- Headers:
+  - `x-api-key: your_ai_key`
+
+```bash
+curl -X GET http://localhost:8000/download/example.jpg \
+  -H "x-api-key: your_ai_key" --output downloaded.jpg
+```
+
+- Returned with correct MIME type (e.g., image/jpeg)
+
+---
+
+## ❌ Delete an Image
+
+- URL: `DELETE /delete/{blob_name}`
+- Headers:
+  - `x-api-key: your_upload_key`
+
+```bash
+curl -X DELETE http://localhost:8000/delete/example.jpg \
+  -H "x-api-key: your_upload_key"
+```
+
+---
+
+## 🧪 Test with Postman
+
+1. Import the endpoints.
+2. Add the appropriate `x-api-key` header.
+3. Use `form-data` for image uploads.
+4. For download, use `Send and Download` to receive the image.
+
+---
 
 ## 📄 License
 
-MIT License
-```
+This project is licensed under the MIT License.
+
+---
