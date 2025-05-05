@@ -1,42 +1,22 @@
-from fastapi import FastAPI, File, UploadFile, HTTPException, Header, Request
-from fastapi.responses import StreamingResponse
-from azure.storage.blob import BlobServiceClient, ContentSettings, generate_blob_sas, BlobSasPermissions
-from dotenv import load_dotenv
-from fastapi.middleware.cors import CORSMiddleware
-from datetime import datetime, timedelta
-import mimetypes
-import os
 import io
-
-load_dotenv()
-
-AZURE_CONNECTION_STRING = os.getenv("AZURE_STORAGE_CONNECTION_STRING")
-CONTAINER_NAME = os.getenv("AZURE_CONTAINER_NAME")
-
-if not AZURE_CONNECTION_STRING:
-    raise ValueError("AZURE_STORAGE_CONNECTION_STRING is not set. Check your .env file.")
-if not CONTAINER_NAME:
-    raise ValueError("AZURE_CONTAINER_NAME is not set. Check your .env file.")
-
-
-UPLOAD_KEYS = set(os.getenv("AUTHORIZED_UPLOAD_KEYS", "").split(","))
-AI_KEYS = set(os.getenv("AUTHORIZED_AI_KEYS", "").split(","))
-
-blob_service_client = BlobServiceClient.from_connection_string(AZURE_CONNECTION_STRING)
-container_client = blob_service_client.get_container_client(CONTAINER_NAME)
+import mimetypes
+from datetime import datetime
+from fastapi import FastAPI, File, UploadFile, HTTPException, Header
+from fastapi.responses import StreamingResponse
+from azure.storage.blob import ContentSettings
+from app.config.config import UPLOAD_KEYS, AI_KEYS, container_client
+from app.dependencies import validate_api_key
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins - adjust this in production!
-    allow_credentials=True,
-    allow_methods=["*"], 
-    allow_headers=["*"], 
-)
 
-def validate_api_key(api_key: str | None, allowed_keys: set):
-    if not api_key or api_key not in allowed_keys:
-        raise HTTPException(status_code=401, detail="Unauthorized")
+app.add_middleware(
+     CORSMiddleware,
+     allow_origins=["*"],  # Allows all origins - adjust this in production!
+     allow_credentials=True,
+     allow_methods=["*"], 
+     allow_headers=["*"], 
+ )
 
 @app.get("/")
 def read_root():
@@ -57,7 +37,7 @@ async def upload_image(file: UploadFile = File(...), x_api_key: str = Header(Non
         )
         return {"status": "success", "blob_name": blob_name}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=404, detail="Error occurred while uploading") 
 
 
 @app.get("/download/{blob_name}")
@@ -76,7 +56,7 @@ def download_image(blob_name: str, x_api_key: str = Header(None)):
 
         return StreamingResponse(stream, media_type=content_type)
     except Exception as e:
-        raise HTTPException(status_code=404, detail="Blob not found or error occurred")
+        raise HTTPException(status_code=404, detail="Error occurred") 
     
 
 @app.delete("/remove/{blob_name}")
@@ -89,4 +69,4 @@ def remove_image(blob_name: str, x_api_key: str = Header(None)):
         blob_client.delete_blob()
         return {"status": "success", "message": f"{blob_name} has been deleted."}
     except Exception as e:
-        raise HTTPException(status_code=404, detail=f"Failed to delete blob: {str(e)}")
+        raise HTTPException(status_code=404, detail=f"Failed to delete blob") # i added this to make it more generic and not expose the blob name in the error message
