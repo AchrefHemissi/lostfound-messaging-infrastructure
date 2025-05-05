@@ -6,8 +6,17 @@ from fastapi.responses import StreamingResponse
 from azure.storage.blob import ContentSettings
 from app.config.config import UPLOAD_KEYS, AI_KEYS, container_client
 from app.dependencies import validate_api_key
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+app.add_middleware(
+     CORSMiddleware,
+     allow_origins=["*"],  # Allows all origins - adjust this in production!
+     allow_credentials=True,
+     allow_methods=["*"], 
+     allow_headers=["*"], 
+ )
 
 @app.get("/")
 def read_root():
