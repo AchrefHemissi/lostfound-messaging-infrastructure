@@ -26,6 +26,14 @@ def read_root():
 async def upload_image(file: UploadFile = File(...), x_api_key: str = Header(None)):
     validate_api_key(x_api_key, UPLOAD_KEYS)
 
+    # Check if the file is a photo 
+    allowed_mime_types = {"image/jpeg", "image/png", "image/gif"}
+    if file.content_type not in allowed_mime_types:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid file type"
+        )
+
     blob_name = f"{datetime.utcnow().strftime('%Y%m%dT%H%M%S')}_{file.filename}"
     blob_client = container_client.get_blob_client(blob_name)
 
@@ -37,7 +45,7 @@ async def upload_image(file: UploadFile = File(...), x_api_key: str = Header(Non
         )
         return {"status": "success", "blob_name": blob_name}
     except Exception as e:
-        raise HTTPException(status_code=404, detail="Error occurred while uploading") 
+        raise HTTPException(status_code=404, detail="Error occurred while uploading")
 
 
 @app.get("/download/{blob_name}")
