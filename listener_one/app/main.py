@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
-from app.config.rabbitMQ_config import get_rabbit_connection, setup_rabbitmq_infrastructure
-from app.service.consume import consume_task
+from app.configs.rabbitMQ_config import get_rabbit_connection, setup_rabbitmq_infrastructure
+from app.services.consume import consume_task
 import asyncio
 import logging
 

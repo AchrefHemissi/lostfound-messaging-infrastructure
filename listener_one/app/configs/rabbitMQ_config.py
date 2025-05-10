@@ -1,8 +1,8 @@
 import aio_pika
 import aiohttp
 import asyncio
-from app.config.config import RABBITMQ_URL
-from app.config.config import SERVICE_A_URL, QUEUE_NAME, RESULT_EXCHANGE_NAME, TASK_EXCHANGE_NAME
+from app.configs.config import RABBITMQ_URL
+from app.configs.config import SERVICE_A_URL, QUEUE_NAME, RESULT_EXCHANGE_NAME, TASK_EXCHANGE_NAME
 
 
 # Module-level variables

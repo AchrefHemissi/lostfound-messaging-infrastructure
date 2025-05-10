@@ -3,8 +3,8 @@ import aiohttp
 import json
 from app.config.rabbitMQ_config import get_rabbit_connection
 from app.config.config import SERVICE_A_URL, QUEUE_NAME, RESULT_EXCHANGE_NAME, TASK_EXCHANGE_NAME
-from app.model.message_receive import Message_receive
-from app.model.message_send import Message_send
+from app.models.message_receive import Message_receive
+from app.models.message_send import Message_send
 from app.config.rabbitMQ_config import task_queue, result_exchange
 
 
