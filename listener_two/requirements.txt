@@ -1,0 +1,5 @@
+dotenv
+aio_pika
+aiohttp
+fastapi
+uvicorn
