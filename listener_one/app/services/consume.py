@@ -1,17 +1,18 @@
 import aio_pika
 import aiohttp
 import json
-from app.config.rabbitMQ_config import get_rabbit_connection
-from app.config.config import SERVICE_A_URL, QUEUE_NAME, RESULT_EXCHANGE_NAME, TASK_EXCHANGE_NAME
+from app.configs.rabbitMQ_config import get_rabbit_connection
+from app.configs.config import SERVICE_A_URL, QUEUE_NAME, RESULT_EXCHANGE_NAME, TASK_EXCHANGE_NAME
 from app.models.message_receive import Message_receive
 from app.models.message_send import Message_send
-from app.config.rabbitMQ_config import task_queue, result_exchange
+from app.configs.rabbitMQ_config import task_queue, result_exchange
 
 
 async def consume_task():
-
+        
         # Consume messages from the queue
         async for message in task_queue: # This is an infinite loop that keeps running
+            print("Consuming task")
             async with message.process():
                 # Parse the received message into Message_receive model
                 received_data = json.loads(message.body.decode())
@@ -35,7 +36,7 @@ async def consume_task():
                             if response.status == 200:
                                 result = await response.json()
                                 result_message = aio_pika.Message(body=str(result).encode())
-                                await result_exchange.publish(result_message, routing_key='')
+                                await result_exchange.publish(result_message)
                             else:
                                 print("Service A failed to respond, requeuing message.")
                                 await task_queue.publish(message)

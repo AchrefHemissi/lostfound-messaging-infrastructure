@@ -35,10 +35,10 @@ async def consume_task():
                             if response.status == 200:
                                 result = await response.json()
                                 result_message = aio_pika.Message(body=str(result).encode())
-                                await result_exchange.publish(result_message, routing_key='')
+                                await result_exchange.publish(result_message)
                             else:
                                 print("Service A failed to respond, requeuing message.")
-                                await task_queue.publish(message)
+                                await task_queue.publish(message) #this can be a problem if the message is not sent to service A the message will be requeued and the loop will keep running
                 except Exception as e:
                     print(f"Error occurred: {e}")
                     await task_queue.publish(message)
