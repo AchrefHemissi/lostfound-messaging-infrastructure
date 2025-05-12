@@ -3,7 +3,7 @@ from aio_pika import ExchangeType
 
 RABBITMQ_URL = "amqp://myuser:mypassword@localhost/"
 
-TASK_EXCHANGE_NAME = "results.similarity"
+TASK_EXCHANGE_NAME = "gateway_fanout_exchange"
 
 async def get_connection():
     return await aio_pika.connect_robust(RABBITMQ_URL)

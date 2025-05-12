@@ -3,3 +3,5 @@ aio_pika
 aiohttp
 fastapi
 uvicorn
+requests
+python-multipart

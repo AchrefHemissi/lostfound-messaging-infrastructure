@@ -23,18 +23,12 @@ async def startup_event():
     logger.info("Starting consumers...")
 
     try:
-        # suspicious_task = asyncio.create_task(
-        #     consume_result(
-        #         queue_name="result_suspicious_queue",
-        #         exchange_name="results.suspicious",
-        #         firebase_route="/result/suspicious"
-        #     )
-        # )
+        
         suspicious_task = asyncio.create_task(
             consume_result(
-                queue_name="queue",
-                exchange_name="gateway_fanout_exchange",
-                firebase_route="/result/similarity"
+                queue_name="result_suspicious_queue",
+                exchange_name="results.suspicious",
+                firebase_route="/result/suspicious"
             )
         )
 

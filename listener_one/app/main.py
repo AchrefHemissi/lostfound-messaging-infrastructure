@@ -3,6 +3,7 @@ from app.configs.rabbitMQ_config import get_rabbit_connection, setup_rabbitmq_in
 from app.services.consume import consume_task
 import asyncio
 import logging
+import aio_pika
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
@@ -23,11 +24,11 @@ async def startup_event():
         logger.info("RabbitMQ connection established")
         
         # Then setup infrastructure
-        await setup_rabbitmq_infrastructure()
+        task_queue, result_exchange = await setup_rabbitmq_infrastructure()
         logger.info("RabbitMQ infrastructure setup completed")
         
         # Finally start consumer
-        consumer_task = asyncio.create_task(consume_task())
+        consumer_task = asyncio.create_task(consume_task(task_queue, result_exchange))
         logger.info("Consumer task started successfully")
         
     except aio_pika.exceptions.AMQPConnectionError as e:
