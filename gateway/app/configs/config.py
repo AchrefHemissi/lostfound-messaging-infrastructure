@@ -1,5 +1,5 @@
-import aio_pika
-from aio_pika import ExchangeType
+import aio_pika # type: ignore
+from aio_pika import ExchangeType # type: ignore
 
 RABBITMQ_URL = "amqp://myuser:mypassword@localhost/"
 

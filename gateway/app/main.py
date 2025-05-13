@@ -1,7 +1,8 @@
-from fastapi import FastAPI, UploadFile, File, Form, HTTPException
+from fastapi import FastAPI, Header, UploadFile, File, Form, HTTPException
 from app.services.rabbitmq.publisher import publish_message
 from app.services.proxy.client import send_image
 from app.services.rabbitmq.consumer import consume_result
+from fastapi.middleware.cors import CORSMiddleware
 import base64
 import asyncio
 import logging
@@ -11,6 +12,14 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 app = FastAPI()
+
+app.add_middleware(
+     CORSMiddleware,
+     allow_origins=["*"],  # Allows all origins - adjust this in production!
+     allow_credentials=True,
+     allow_methods=["*"], 
+     allow_headers=["*"], 
+ )
 
 # Globals to keep references for cancellation
 suspicious_task = None
@@ -74,7 +83,8 @@ async def upload(
     post_type: str = Form(...),
     description: str = Form(...),
     item_category: str = Form(...),
-    file: UploadFile = File(...)
+    file: UploadFile = File(...),
+    x_api_key: str = Header(None)
 ):
     try:
 
@@ -82,8 +92,8 @@ async def upload(
         image_bytes = await file.read()
 
         # Send image to proxy
-        proxy_response = send_image(file)
-        image_url = proxy_response.get("image_url", "")
+        proxy_response = await send_image(file, x_api_key,image_bytes)
+        image_url = proxy_response.get("blob_name") #from proxy service documentation
 
         # Encode to base64 for safe JSON transmission
         image_b64 = base64.b64encode(image_bytes).decode('utf-8')
