@@ -35,6 +35,7 @@ async def consume_task(task_queue, result_exchange):
                     continue
 
                 data = aiohttp.FormData()
+                data.add_field("user_id", received_message.user_id)
                 data.add_field("image_file", image_bytes, filename=received_message.filename, content_type=received_message.content_type)
                 data.add_field("post_id", received_message.post_id)
                 data.add_field("post_type", received_message.post_type)
