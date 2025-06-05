@@ -1,3 +1,4 @@
+import datetime
 from fastapi import FastAPI, Header, UploadFile, File, Form, HTTPException
 from app.services.rabbitmq.publisher import publish_message
 from app.services.proxy.client import send_image
@@ -107,7 +108,8 @@ async def upload(
             "item_category": item_category,
             "image_data": image_b64,
             "filename": file.filename,       # keep file metadata
-            "content_type": file.content_type
+            "content_type": file.content_type,
+            "date": datetime.now().isoformat()  # Add timestamp
         }
 
         # Publish to RabbitMQ

@@ -41,6 +41,7 @@ async def consume_task(task_queue, result_exchange):
                 data.add_field("post_type", received_message.post_type)
                 data.add_field("text", received_message.description)
                 data.add_field("item_type", received_message.item_category)
+                data.add_field("date", received_message.date)
 
                 print(f"Service A: Processing task")
 
