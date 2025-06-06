@@ -10,3 +10,4 @@ class Message_receive(BaseModel):
     content_type: Optional[str]
     description: str
     item_category: str
+    date: str

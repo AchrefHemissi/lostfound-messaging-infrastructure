@@ -7,3 +7,4 @@ class Message_send(BaseModel):
     image_url: Optional[str]  # Make image_url optional
     text: str
     item_type: str
+    date: str
