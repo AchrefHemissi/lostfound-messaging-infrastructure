@@ -4,11 +4,11 @@ This service acts as the central entry point and API Gateway for the [FoundIT-Co
 
 ## Overview
 
-The `gateway` service serves as the primary interface between the user-facing frontend and the various backend microservices. Its main function is to receive requests, direct them to the correct service for processing, and then relay the responses back to the frontend. It plays a vital role in orchestrating the flow of information within the system, ensuring that messages are efficiently and reliably delivered.
+The `gateway` service serves as the primary interface between the main backend system(firebase) and the various backend microservices. Its main function is to receive requests, direct them to the correct service for processing, and then relay the responses back to the firebase. It plays a vital role in orchestrating the flow of information within the system, ensuring that messages are efficiently and reliably delivered.
 
 ## Key Responsibilities
 
-*   **Request Routing**: Directs incoming requests from the frontend to the relevant microservices (e.g., Similarity Search Service, Suspicious User Detection Service, Unstructured Data Storage Service).
+*   **Request Routing**: Directs incoming requests from the firebase to the relevant microservices (e.g., Similarity Search Service, Suspicious User Detection Service, Unstructured Data Storage Service).
 *   **RabbitMQ Integration**: Communicates with RabbitMQ to send messages to task queues (`task_queue_similarity`, `task_queue_suspicious`) and consume results from response queues (`result_similarity_queue`, `result_suspicious_queue`). This enables asynchronous processing and decouples services.
 *   **API Management**: Acts as an API Gateway, potentially handling concerns like authentication, rate limiting, and load balancing before forwarding requests.
 *   **Orchestration**: Coordinates the flow of data and messages between different parts of the LostFound system.
