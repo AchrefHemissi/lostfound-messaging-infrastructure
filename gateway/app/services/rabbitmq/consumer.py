@@ -17,6 +17,10 @@ async def consume_result(queue_name: str, exchange_name: str, firebase_route: st
         async for message in queue_iter:
             async with message.process():
                 data = json.loads(message.body.decode())
+                data = {
+                    "originalItemId": data.get("id"),
+                    "similarItemIds": data.get("results"),
+                }
                 logger.info(f"Received message from exchange '{exchange_name}' for queue '{queue_name}'")
                 try:
                     await send_to_firebase(data, route=firebase_route)
