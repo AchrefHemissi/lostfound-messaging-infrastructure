@@ -38,16 +38,14 @@ This infrastructure component provides:
 The messaging infrastructure implements several key patterns:
 - **Publish-Subscribe**: For broadcasting events to multiple interested parties
 - **Point-to-Point**: For direct communication between specific services
-- **Request-Reply**: For synchronous-style operations over asynchronous channels
-
+- 
 ## Message Flow Examples
 
 ### Lost Item Report Flow
 1. User reports lost item → Mobile app publishes `ItemLostReported` event
 2. Smart matching service consumes event → Initiates matching process
-3. Computer vision service processes images → Publishes `ImageAnalysisCompleted` event
-4. Matching service finds potential matches → Publishes `PotentialMatchFound` event
-5. Notification service sends alerts to relevant users
+3. Matching service finds potential matches → Publishes `PotentialMatchFound` event
+4. Notification service sends alerts to relevant users
 
 ### Fraud Detection Flow
 1. User actions generate events throughout the system
